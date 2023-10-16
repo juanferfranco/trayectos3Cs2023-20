@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 		<title>reveal.js</title>
 
@@ -692,10 +692,15 @@
 			</div>
 		</div>
 
+
 		<script src="dist/reveal.js"></script>
 		<script src="plugin/notes/notes.js"></script>
 		<script src="plugin/markdown/markdown.js"></script>
 		<script src="plugin/highlight/highlight.js"></script>
+		<script src="https://cdn.pubnub.com/sdk/javascript/pubnub.7.3.3.min.js"></script>
+		<script src="plugin/pubnub-remote-control.js"></script>
+		<script src="config.js"></script>
+
 		<script>
 			// More info about initialization & config:
 			// - https://revealjs.com/initialization/
@@ -705,9 +710,17 @@
 				width: 1280,
 				height: 720,
 				transition: "slide",
-				autoPlayMedia: true,	
+				autoPlayMedia: true,
+				pubnubRemoteControl:{
+    			publishKey : CONFIG.pubnub_publish_key,
+    			subscribeKey : CONFIG.pubnub_subscribe_key,
+				userId : CONFIG.userId},
 				// Learn about plugins: https://revealjs.com/plugins/
-				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ],
+				dependencies: [
+				{ src: 'plugin/pubnub-remote-control.js', async: true, condition: function() { return !!document.body.classList; } },
+       			
+        		]
 			});
 		</script>
 	</body>
