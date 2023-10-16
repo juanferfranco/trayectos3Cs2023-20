@@ -1,50 +1,62 @@
-<p align="center">
-  <a href="https://revealjs.com">
-  <img src="https://hakim-static.s3.amazonaws.com/reveal-js/logo/v1/reveal-black-text-sticker.png" alt="reveal.js" width="500">
-  </a>
-  <br><br>
-  <a href="https://github.com/hakimel/reveal.js/actions"><img src="https://github.com/hakimel/reveal.js/workflows/tests/badge.svg"></a>
-  <a href="https://slides.com/"><img src="https://s3.amazonaws.com/static.slid.es/images/slides-github-banner-320x40.png?1" alt="Slides" width="160" height="20"></a>
-</p>
+## IMPORTANTE
 
-reveal.js is an open source HTML presentation framework. It enables anyone with a web browser to create beautiful presentations for free. Check out the live demo at [revealjs.com](https://revealjs.com/).
+Esta versión de la presentación no tiene el control remoto. Para 
+hacer el control remoto dejo algunas indicaciones más abajo.
 
-The framework comes with a powerful feature set including [nested slides](https://revealjs.com/vertical-slides/), [Markdown support](https://revealjs.com/markdown/), [Auto-Animate](https://revealjs.com/auto-animate/), [PDF export](https://revealjs.com/pdf-export/), [speaker notes](https://revealjs.com/speaker-view/), [LaTeX typesetting](https://revealjs.com/math/), [syntax highlighted code](https://revealjs.com/code/) and an [extensive API](https://revealjs.com/api/).
+## Visualización de la presentación
 
----
+La presentación se puede ver [aquí](https://juanferfranco.github.io//trayectos3Cs2023-20/).
 
-Want to create reveal.js presentation in a graphical editor? Try <https://slides.com>. It's made by the same people behind reveal.js.
+## Control remoto
 
----
+Se pueden hacer pruebas de control remoto de la presentación usando la consola de depuración de pubnub.
 
-### Sponsors
-Hakim's open source work is supported by <a href="https://github.com/sponsors/hakimel">GitHub sponsors</a>. Special thanks to:
-<div align="center">
-  <table>
-    <td align="center">
-      <a href="https://workos.com/?utm_campaign=github_repo&utm_medium=referral&utm_content=revealjs&utm_source=github">
-        <div>
-          <img src="https://user-images.githubusercontent.com/629429/151508669-efb4c3b3-8fe3-45eb-8e47-e9510b5f0af1.svg" width="290" alt="WorkOS">
-        </div>
-        <b>Your app, enterprise-ready.</b>
-        <div>
-          <sub>Start selling to enterprise customers with just a few lines of code. Add Single Sign-On (and more) in minutes instead of months.</sup>
-        </div>
-      </a>
-    </td>
-  </table>
-</div>
+* En la raíz del proyecto se debe crear el archivo config.js con la siguiente información:
 
----
+```js
+var CONFIG = {
+    pubnub_publish_key: 'pub-c-key',
+    pubnub_subscribe_key: 'sub-c-key',
+    userId: 'set any name'
+};
+```
+* Las key se obtienen luego de configurar una aplicación en pubnub.
 
-### Getting started
-- 🚀 [Install reveal.js](https://revealjs.com/installation)
-- 👀 [View the demo presentation](https://revealjs.com/demo)
-- 📖 [Read the documentation](https://revealjs.com/markup/)
-- 🖌 [Try the visual editor for reveal.js at Slides.com](https://slides.com/)
-- 🎬 [Watch the reveal.js video course (paid)](https://revealjs.com/course)
+El index.html se debe modificar así:
 
---- 
-<div align="center">
-  MIT licensed | Copyright © 2011-2023 Hakim El Hattab, https://hakim.se
-</div>
+```html
+<script src="dist/reveal.js"></script>
+<script src="plugin/notes/notes.js"></script>
+<script src="plugin/markdown/markdown.js"></script>
+<script src="plugin/highlight/highlight.js"></script>
+<script src="https://cdn.pubnub.com/sdk/javascript/pubnub.7.3.3.min.js"></script>
+<script src="plugin/pubnub-remote-control.js"></script>
+<script src="config.js"></script>
+
+<script>
+    // More info about initialization & config:
+    // - https://revealjs.com/initialization/
+    // - https://revealjs.com/config/
+    Reveal.initialize({
+        hash: true,
+        width: 1280,
+        height: 720,
+        transition: "slide",
+        autoPlayMedia: true,
+        pubnubRemoteControl:{
+        publishKey : CONFIG.pubnub_publish_key,
+        subscribeKey : CONFIG.pubnub_subscribe_key,
+        userId : CONFIG.userId},
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ],
+        dependencies: [
+        { src: 'plugin/pubnub-remote-control.js', async: true, condition: function() { return !!document.body.classList; } },
+        
+        ]
+    });
+</script>
+```
+
+## Correr localmente la presentación
+
+Seguir las recomendaciones de la página oficial de reveal.js [aquí](https://revealjs.com/installation/#full-setup).  
